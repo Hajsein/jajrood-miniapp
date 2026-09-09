@@ -22,55 +22,56 @@
     --radius-lg:20px;
     --radius-md:14px;
     --radius-sm:10px;
+    --tg-viewport-height:100dvh;
   }
-  *{box-sizing:border-box;}
-  html,body{margin:0;padding:0;}
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+  html,body{margin:0;padding:0;height:100%;overscroll-behavior:none;}
   body{
     font-family:'Vazirmatn',sans-serif;
-    background:#DDE6E1;
-    display:flex;
-    justify-content:center;
-    padding:32px 12px;
+    background:var(--jj-cream);
     color:var(--jj-ink);
   }
-  .phone{
-    width:390px;
-    max-width:100%;
+  .app{
+    max-width:560px;
+    margin:0 auto;
+    height:100vh;
+    height:var(--tg-viewport-height);
     background:var(--jj-cream);
-    border-radius:36px;
-    border:8px solid #1a1a1a;
-    box-shadow:0 20px 50px rgba(0,0,0,0.25);
-    overflow:hidden;
     position:relative;
-  }
-  .notch{
-    position:absolute;
-    top:0;left:50%;
-    transform:translateX(-50%);
-    width:120px;height:22px;
-    background:#1a1a1a;
-    border-radius:0 0 14px 14px;
-    z-index:50;
+    overflow:hidden;
+    isolation:isolate;
   }
   .screen{
-    height:780px;
-    overflow-y:auto;
+    height:100%;
+    overflow:hidden;
     display:none;
     flex-direction:column;
+  }
+  .screen.active{display:flex;}
+  .screen-scroll{
+    flex:1 1 auto;
+    overflow-y:auto;
+    -webkit-overflow-scrolling:touch;
     -ms-overflow-style:none;
     scrollbar-width:none;
   }
-  .screen::-webkit-scrollbar{display:none;}
-  .screen.active{display:flex;}
+  .screen-scroll::-webkit-scrollbar{display:none;}
 
   /* Top bar */
   .topbar{
-    padding:44px 20px 14px;
+    padding:calc(14px + env(safe-area-inset-top)) 20px 14px;
     background:var(--jj-deep);
+    background-image:
+      linear-gradient(180deg, rgba(15,61,62,0.0) 40%, rgba(15,61,62,0.55) 100%),
+      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 60' preserveAspectRatio='none'%3E%3Cpath d='M0 55 L40 30 L80 48 L120 18 L160 42 L200 12 L240 40 L280 22 L320 46 L360 26 L400 50 L400 60 L0 60 Z' fill='%23ffffff' fill-opacity='0.05'/%3E%3C/svg%3E");
+    background-repeat:no-repeat;
+    background-size:cover;
     color:#fff;
     display:flex;
     align-items:center;
     justify-content:space-between;
+    flex:0 0 auto;
+    position:relative;
   }
   .topbar .brand{display:flex;align-items:center;gap:10px;}
   .brand-mark{
@@ -106,10 +107,27 @@
     color:#fff;
     display:flex;align-items:center;justify-content:space-between;
     gap:10px;
+    position:relative;
+    overflow:hidden;
   }
-  .hero p.h1{font-size:14px;font-weight:600;margin:0 0 4px;}
-  .hero p.h2{font-size:11px;color:#BFDAD5;margin:0;line-height:1.6;}
-  .hero .wave{font-size:26px;opacity:.9;}
+  .hero::before{
+    content:'';
+    position:absolute;inset:0;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 300 90'%3E%3Cpath d='M0 60 Q40 30 80 55 T160 50 T240 60 T300 45 L300 90 L0 90 Z' fill='%23ffffff' fill-opacity='0.06'/%3E%3C/svg%3E");
+    background-size:cover;background-position:bottom;
+    pointer-events:none;
+  }
+  .hero p.h1{font-size:14px;font-weight:600;margin:0 0 4px;position:relative;}
+  .hero p.h2{font-size:11px;color:#BFDAD5;margin:0;line-height:1.6;position:relative;}
+  .hero .drop{
+    width:34px;height:34px;flex-shrink:0;position:relative;
+    animation:drop-bob 3.2s ease-in-out infinite;
+  }
+  .hero .drop svg{width:100%;height:100%;fill:var(--jj-gold);}
+  @keyframes drop-bob{
+    0%,100%{transform:translateY(0);}
+    50%{transform:translateY(-4px);}
+  }
 
   /* Category pills */
   .cats{
@@ -193,10 +211,13 @@
   /* Bottom nav */
   .bottomnav{
     display:flex;
+    flex:0 0 auto;
     border-top:1px solid #E9E5D9;
     background:#fff;
     padding:10px 10px calc(10px + env(safe-area-inset-bottom));
-    margin-top:auto;
+    box-shadow:0 -6px 16px rgba(15,61,62,0.06);
+    position:relative;
+    z-index:20;
   }
   .navitem{
     flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;
@@ -250,13 +271,14 @@
   .addr-card .badge{font-size:10px;background:var(--jj-deep);color:#fff;padding:2px 8px;border-radius:100px;}
 
   .cta{
-    margin:8px 20px 20px;
+    margin:8px 20px calc(16px + env(safe-area-inset-bottom));
     padding:14px;border-radius:var(--radius-md);
     background:var(--jj-deep);color:#fff;
     border:none;width:calc(100% - 40px);
     font-family:inherit;font-size:14px;font-weight:600;
     display:flex;align-items:center;justify-content:center;gap:8px;
     cursor:pointer;
+    flex:0 0 auto;
   }
   .cta.ghost{background:#fff;color:var(--jj-deep);border:1.5px solid var(--jj-deep);}
   .cta:disabled{opacity:.45;cursor:not-allowed;}
@@ -284,8 +306,9 @@
 
   /* Profile */
   .profile-head{
-    padding:28px 20px 18px;background:var(--jj-deep);color:#fff;
+    padding:calc(20px + env(safe-area-inset-top)) 20px 18px;background:var(--jj-deep);color:#fff;
     display:flex;align-items:center;gap:12px;
+    flex:0 0 auto;
   }
   .avatar{
     width:52px;height:52px;border-radius:50%;
@@ -351,8 +374,7 @@
 </style>
 </head>
 <body>
-<div class="phone">
-  <div class="notch"></div>
+<div class="app">
 
   <!-- ===== HOME ===== -->
   <div class="screen active" id="screen-home">
@@ -370,22 +392,24 @@
       </div>
     </div>
 
-    <div class="hero">
-      <div>
-        <p class="h1">تحویل امروز تا عصر</p>
-        <p class="h2">سفارش بالای ۲۰۰ هزار تومان، ارسال رایگان</p>
+    <div class="screen-scroll">
+      <div class="hero">
+        <div>
+          <p class="h1">تحویل امروز تا عصر</p>
+          <p class="h2">سفارش بالای ۲۰۰ هزار تومان، ارسال رایگان</p>
+        </div>
+        <div class="drop"><svg viewBox="0 0 24 24"><path d="M12 2C12 2 5 11 5 15.5C5 19.6 8.1 22 12 22C15.9 22 19 19.6 19 15.5C19 11 12 2 12 2Z"/></svg></div>
       </div>
-      <div class="wave">💧</div>
-    </div>
 
-    <div class="cats">
-      <div class="pill active" onclick="filterCat(this,'all')">همه محصولات</div>
-      <div class="pill" onclick="filterCat(this,'bottle')">بطری</div>
-      <div class="pill" onclick="filterCat(this,'gallon')">گالن</div>
-      <div class="pill" onclick="filterCat(this,'pack')">بسته اداری</div>
-    </div>
+      <div class="cats">
+        <div class="pill active" onclick="filterCat(this,'all')">همه محصولات</div>
+        <div class="pill" onclick="filterCat(this,'bottle')">بطری</div>
+        <div class="pill" onclick="filterCat(this,'gallon')">گالن</div>
+        <div class="pill" onclick="filterCat(this,'pack')">بسته اداری</div>
+      </div>
 
-    <div class="grid" id="product-grid"></div>
+      <div class="grid" id="product-grid"></div>
+    </div>
 
     <div class="cartbar" id="cartbar" style="display:none;" onclick="go('cart')">
       <div class="l">
@@ -395,7 +419,6 @@
       <div class="r" id="cartbar-price">۱۷۰,۰۰۰ تومان</div>
     </div>
 
-    <div style="flex:1"></div>
     <div class="bottomnav" id="nav-home"></div>
   </div>
 
@@ -407,7 +430,7 @@
         <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6L6 18M6 6l12 12"/></svg>
       </div>
     </div>
-    <div id="cart-content" style="flex:1;"></div>
+    <div class="screen-scroll" id="cart-content"></div>
     <div class="bottomnav" id="nav-cart"></div>
   </div>
 
@@ -420,39 +443,39 @@
       </div>
     </div>
 
-    <div class="sect-title">آدرس تحویل</div>
-    <div class="addr-card">
-      <div>
-        <p class="t">منزل — تهران، تجریش</p>
-        <p class="a">خیابان ولیعصر، کوچه بهار، پلاک ۱۲</p>
+    <div class="screen-scroll">
+      <div class="sect-title">آدرس تحویل</div>
+      <div class="addr-card">
+        <div>
+          <p class="t">منزل — تهران، تجریش</p>
+          <p class="a">خیابان ولیعصر، کوچه بهار، پلاک ۱۲</p>
+        </div>
+        <span class="badge">پیش‌فرض</span>
       </div>
-      <span class="badge">پیش‌فرض</span>
-    </div>
 
-    <div class="sect-title">زمان تحویل</div>
-    <div class="field">
-      <select>
-        <option>امروز عصر (۱۶ تا ۲۰)</option>
-        <option>فردا صبح (۹ تا ۱۲)</option>
-        <option>فردا عصر (۱۶ تا ۲۰)</option>
-      </select>
-    </div>
+      <div class="sect-title">زمان تحویل</div>
+      <div class="field">
+        <select>
+          <option>امروز عصر (۱۶ تا ۲۰)</option>
+          <option>فردا صبح (۹ تا ۱۲)</option>
+          <option>فردا عصر (۱۶ تا ۲۰)</option>
+        </select>
+      </div>
 
-    <div class="sect-title">روش پرداخت</div>
-    <div class="field">
-      <select>
-        <option>پرداخت آنلاین</option>
-        <option>پرداخت در محل (کارتخوان)</option>
-      </select>
-    </div>
+      <div class="sect-title">روش پرداخت</div>
+      <div class="field">
+        <select>
+          <option>پرداخت آنلاین</option>
+          <option>پرداخت در محل (کارتخوان)</option>
+        </select>
+      </div>
 
-    <div class="summary">
-      <div class="line"><span>جمع کالاها</span><span id="chk-subtotal">۰ تومان</span></div>
-      <div class="line"><span>هزینه ارسال</span><span>رایگان</span></div>
-      <div class="line total"><span>مبلغ نهایی</span><span id="chk-total">۰ تومان</span></div>
+      <div class="summary">
+        <div class="line"><span>جمع کالاها</span><span id="chk-subtotal">۰ تومان</span></div>
+        <div class="line"><span>هزینه ارسال</span><span>رایگان</span></div>
+        <div class="line total"><span>مبلغ نهایی</span><span id="chk-total">۰ تومان</span></div>
+      </div>
     </div>
-
-    <div style="flex:1"></div>
     <button class="cta" onclick="confirmOrder()">
       <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
       ثبت نهایی سفارش
@@ -480,25 +503,25 @@
       <div style="width:34px;"></div>
     </div>
 
-    <div class="order-card">
-      <div class="top"><span class="id">سفارش #JJ-4821</span><span class="status pending">در انتظار تایید</span></div>
-      <p class="items">۲ عدد بطری ۱.۵ لیتری، ۱ عدد گالن ۱۹ لیتری</p>
-      <div class="foot"><span class="date">امروز، ۱۴:۲۰</span><button class="reorder" onclick="showToast('سفارش به سبد اضافه شد')">سفارش تکراری</button></div>
-    </div>
+    <div class="screen-scroll">
+      <div class="order-card">
+        <div class="top"><span class="id">سفارش #JJ-4821</span><span class="status pending">در انتظار تایید</span></div>
+        <p class="items">۲ عدد بطری ۱.۵ لیتری، ۱ عدد گالن ۱۹ لیتری</p>
+        <div class="foot"><span class="date">امروز، ۱۴:۲۰</span><button class="reorder" onclick="showToast('سفارش به سبد اضافه شد')">سفارش تکراری</button></div>
+      </div>
 
-    <div class="order-card">
-      <div class="top"><span class="id">سفارش #JJ-4790</span><span class="status shipping">در حال ارسال</span></div>
-      <p class="items">۱ بسته اداری ۱۲ عددی</p>
-      <div class="foot"><span class="date">دیروز، ۱۱:۰۵</span><button class="reorder" onclick="showToast('سفارش به سبد اضافه شد')">سفارش تکراری</button></div>
-    </div>
+      <div class="order-card">
+        <div class="top"><span class="id">سفارش #JJ-4790</span><span class="status shipping">در حال ارسال</span></div>
+        <p class="items">۱ بسته اداری ۱۲ عددی</p>
+        <div class="foot"><span class="date">دیروز، ۱۱:۰۵</span><button class="reorder" onclick="showToast('سفارش به سبد اضافه شد')">سفارش تکراری</button></div>
+      </div>
 
-    <div class="order-card">
-      <div class="top"><span class="id">سفارش #JJ-4712</span><span class="status done">تحویل شده</span></div>
-      <p class="items">۲ عدد گالن ۱۹ لیتری</p>
-      <div class="foot"><span class="date">۳ روز پیش</span><button class="reorder" onclick="showToast('سفارش به سبد اضافه شد')">سفارش تکراری</button></div>
+      <div class="order-card">
+        <div class="top"><span class="id">سفارش #JJ-4712</span><span class="status done">تحویل شده</span></div>
+        <p class="items">۲ عدد گالن ۱۹ لیتری</p>
+        <div class="foot"><span class="date">۳ روز پیش</span><button class="reorder" onclick="showToast('سفارش به سبد اضافه شد')">سفارش تکراری</button></div>
+      </div>
     </div>
-
-    <div style="flex:1"></div>
     <div class="bottomnav" id="nav-orders"></div>
   </div>
 
@@ -511,35 +534,35 @@
         <p class="profile-phone">۰۹۱۲ ۱۲۳ ۴۵۶۷</p>
       </div>
     </div>
-    <div class="points-card">
-      <div><div class="l">امتیاز باشگاه مشتریان</div><div class="v">۱۲۸ امتیاز</div></div>
-      <button class="reorder">مشاهده تخفیف‌ها</button>
-    </div>
+    <div class="screen-scroll">
+      <div class="points-card">
+        <div><div class="l">امتیاز باشگاه مشتریان</div><div class="v">۱۲۸ امتیاز</div></div>
+        <button class="reorder">مشاهده تخفیف‌ها</button>
+      </div>
 
-    <div class="menu-list">
-      <div class="menu-row">
-        <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 12-9 12s-9-5-9-12a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
-        آدرس‌های من
-        <svg class="chev" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
-      </div>
-      <div class="menu-row">
-        <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
-        تاریخچه سفارش‌ها
-        <svg class="chev" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
-      </div>
-      <div class="menu-row">
-        <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9M13.73 21a2 2 0 01-3.46 0"/></svg>
-        اعلان‌ها
-        <svg class="chev" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
-      </div>
-      <div class="menu-row">
-        <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 9V5a3 3 0 00-6 0v4M5 9h14l-1 12H6L5 9z"/></svg>
-        پشتیبانی
-        <svg class="chev" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
+      <div class="menu-list">
+        <div class="menu-row">
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 12-9 12s-9-5-9-12a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+          آدرس‌های من
+          <svg class="chev" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
+        </div>
+        <div class="menu-row">
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+          تاریخچه سفارش‌ها
+          <svg class="chev" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
+        </div>
+        <div class="menu-row">
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9M13.73 21a2 2 0 01-3.46 0"/></svg>
+          اعلان‌ها
+          <svg class="chev" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
+        </div>
+        <div class="menu-row">
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 9V5a3 3 0 00-6 0v4M5 9h14l-1 12H6L5 9z"/></svg>
+          پشتیبانی
+          <svg class="chev" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
+        </div>
       </div>
     </div>
-
-    <div style="flex:1"></div>
     <div class="bottomnav" id="nav-profile"></div>
   </div>
 
@@ -718,6 +741,15 @@ const tg = window.Telegram ? window.Telegram.WebApp : null;
 if(tg){
   tg.ready();
   tg.expand();
+
+  // Keep the app's height in sync with Telegram's real viewport
+  // (accounts for the client chrome so the bottom nav is never clipped)
+  function syncViewportHeight(){
+    const h = tg.viewportStableHeight || tg.viewportHeight;
+    if(h) document.documentElement.style.setProperty('--tg-viewport-height', h + 'px');
+  }
+  syncViewportHeight();
+  tg.onEvent('viewportChanged', syncViewportHeight);
 
   // Fill real Telegram user info if available
   const user = tg.initDataUnsafe && tg.initDataUnsafe.user;
