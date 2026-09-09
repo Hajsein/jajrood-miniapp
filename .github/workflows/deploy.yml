@@ -23,3 +23,4 @@ jobs:
           projectName: jajrood-miniapp
           directory: .
           gitHubToken: ${{ secrets.GITHUB_TOKEN }}
+
