@@ -771,11 +771,6 @@ if(tg){
     }
   };
 
-  // Fullscreen mode (Bot API 8.0+) — more room, no Telegram header
-  if(typeof tg.requestFullscreen === 'function'){
-    tg.requestFullscreen();
-  }
-
   // Keep the app's height in sync with Telegram's real viewport
   // (accounts for the client chrome so the bottom nav is never clipped)
   function syncViewportHeight(){
