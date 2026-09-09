@@ -763,4 +763,63 @@ if(tg){
     showToast('میان‌بر به صفحه اصلی اضافه شد');
   });
 
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        
+  window.addToHomeScreen = function(){
+    if(typeof tg.addToHomeScreen === 'function'){
+      tg.addToHomeScreen();
+    } else {
+      showToast('این قابلیت روی نسخه‌ی فعلی تلگرام شما پشتیبانی نمی‌شود');
+    }
+  };
+
+  // Fullscreen mode (Bot API 8.0+) — more room, no Telegram header
+  if(typeof tg.requestFullscreen === 'function'){
+    tg.requestFullscreen();
+  }
+
+  // Keep the app's height in sync with Telegram's real viewport
+  // (accounts for the client chrome so the bottom nav is never clipped)
+  function syncViewportHeight(){
+    const h = tg.viewportStableHeight || tg.viewportHeight;
+    if(h) document.documentElement.style.setProperty('--tg-viewport-height', h + 'px');
+  }
+  syncViewportHeight();
+  tg.onEvent('viewportChanged', syncViewportHeight);
+  tg.onEvent('fullscreenChanged', syncViewportHeight);
+
+  // Fill real Telegram user info if available
+  const user = tg.initDataUnsafe && tg.initDataUnsafe.user;
+  if(user){
+    const nameEl = document.querySelector('.profile-name');
+    const avatarEl = document.querySelector('.avatar');
+    if(nameEl) nameEl.textContent = [user.first_name, user.last_name].filter(Boolean).join(' ');
+    if(avatarEl) avatarEl.textContent = (user.first_name||'ک')[0];
+  }
+
+  // Sync BackButton with in-app navigation instead of the browser
+  tg.BackButton.onClick(()=> go('home'));
+  const origGo = go;
+  go = function(screen){
+    origGo(screen);
+    if(screen==='home') tg.BackButton.hide(); else tg.BackButton.show();
+    if(screen==='checkout') syncMainButton();
+  };
+
+  function syncMainButton(){
+    const {totalPrice} = updateCartBar();
+    tg.MainButton.setText('ثبت نهایی سفارش — ' + fmt(totalPrice) + ' تومان');
+    tg.MainButton.show();
+    tg.MainButton.onClick(confirmOrder);
+  }
+  tg.MainButton.hide();
+
+  // Send the completed order back to the bot's backend on confirm
+  const origConfirm = confirmOrder;
+  confirmOrder = function(){
+    tg.MainButton.hide();
+    origConfirm();
+    // tg.sendData(JSON.stringify({event:'order_submitted', ...}));  // for simple bots without a webhook backend
+  };
+}
+</script>
+</body>
+</html>
