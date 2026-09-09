@@ -10,10 +10,10 @@
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
 <style>
   :root{
-    --jj-deep:#0F3D3E;
-    --jj-mid:#1C6E6A;
-    --jj-accent:#4FA89B;
-    --jj-mist:#EAF3F0;
+    --jj-deep:#0B2A4A;
+    --jj-mid:#14508C;
+    --jj-accent:#4FA8E0;
+    --jj-mist:#E9F2FB;
     --jj-cream:#FAF8F3;
     --jj-stone:#8C9490;
     --jj-ink:#122523;
@@ -62,7 +62,7 @@
     padding:calc(14px + env(safe-area-inset-top)) 20px 14px;
     background:var(--jj-deep);
     background-image:
-      linear-gradient(180deg, rgba(15,61,62,0.0) 40%, rgba(15,61,62,0.55) 100%),
+      linear-gradient(180deg, rgba(11,42,74,0.0) 40%, rgba(11,42,74,0.55) 100%),
       url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 60' preserveAspectRatio='none'%3E%3Cpath d='M0 55 L40 30 L80 48 L120 18 L160 42 L200 12 L240 40 L280 22 L320 46 L360 26 L400 50 L400 60 L0 60 Z' fill='%23ffffff' fill-opacity='0.05'/%3E%3C/svg%3E");
     background-repeat:no-repeat;
     background-size:cover;
@@ -81,7 +81,7 @@
     font-weight:700;font-size:15px;color:#fff;
   }
   .brand-name{font-weight:600;font-size:16px;line-height:1.1;}
-  .brand-sub{font-size:10px;color:#B9D6D0;letter-spacing:.5px;}
+  .brand-sub{font-size:10px;color:#B9D6F2;letter-spacing:.5px;}
   .icon-btn{
     width:34px;height:34px;border-radius:50%;
     background:rgba(255,255,255,0.12);
@@ -118,7 +118,7 @@
     pointer-events:none;
   }
   .hero p.h1{font-size:14px;font-weight:600;margin:0 0 4px;position:relative;}
-  .hero p.h2{font-size:11px;color:#BFDAD5;margin:0;line-height:1.6;position:relative;}
+  .hero p.h2{font-size:11px;color:#BFDDF5;margin:0;line-height:1.6;position:relative;}
   .hero .drop{
     width:34px;height:34px;flex-shrink:0;position:relative;
     animation:drop-bob 3.2s ease-in-out infinite;
@@ -215,7 +215,7 @@
     border-top:1px solid #E9E5D9;
     background:#fff;
     padding:10px 10px calc(10px + env(safe-area-inset-bottom));
-    box-shadow:0 -6px 16px rgba(15,61,62,0.06);
+    box-shadow:0 -6px 16px rgba(11,42,74,0.06);
     position:relative;
     z-index:20;
   }
@@ -317,12 +317,12 @@
     font-weight:700;font-size:17px;
   }
   .profile-name{font-size:15px;font-weight:600;margin:0 0 2px;}
-  .profile-phone{font-size:11.5px;color:#BFDAD5;margin:0;direction:ltr;text-align:right;}
+  .profile-phone{font-size:11.5px;color:#BFDDF5;margin:0;direction:ltr;text-align:right;}
 
   .points-card{
     margin:-16px 20px 6px;padding:14px;
     background:#fff;border-radius:var(--radius-md);
-    box-shadow:0 6px 18px rgba(15,61,62,0.12);
+    box-shadow:0 6px 18px rgba(11,42,74,0.12);
     display:flex;justify-content:space-between;align-items:center;
   }
   .points-card .l{font-size:11.5px;color:var(--jj-stone);}
@@ -556,6 +556,11 @@
           اعلان‌ها
           <svg class="chev" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
         </div>
+        <div class="menu-row" id="home-shortcut-row" onclick="addToHomeScreen()" style="display:none;">
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l9 6v12a2 2 0 01-2 2H5a2 2 0 01-2-2V8l9-6z"/><path d="M9 22V12h6v10"/></svg>
+          <span id="home-shortcut-label">افزودن میان‌بر به صفحه اصلی</span>
+          <svg class="chev" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
+        </div>
         <div class="menu-row">
           <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 9V5a3 3 0 00-6 0v4M5 9h14l-1 12H6L5 9z"/></svg>
           پشتیبانی
@@ -742,49 +747,20 @@ if(tg){
   tg.ready();
   tg.expand();
 
-  // Keep the app's height in sync with Telegram's real viewport
-  // (accounts for the client chrome so the bottom nav is never clipped)
-  function syncViewportHeight(){
-    const h = tg.viewportStableHeight || tg.viewportHeight;
-    if(h) document.documentElement.style.setProperty('--tg-viewport-height', h + 'px');
+  // Home screen shortcut (Bot API 8.0+)
+  const homeRow = document.getElementById('home-shortcut-row');
+  const homeLabel = document.getElementById('home-shortcut-label');
+  if(typeof tg.addToHomeScreen === 'function'){
+    homeRow.style.display = 'flex';
+    if(typeof tg.checkHomeScreenStatus === 'function'){
+      tg.checkHomeScreenStatus(status=>{
+        if(status === 'added') homeLabel.textContent = 'میان‌بر به صفحه اصلی اضافه شده ✓';
+      });
+    }
   }
-  syncViewportHeight();
-  tg.onEvent('viewportChanged', syncViewportHeight);
+  tg.onEvent('homeScreenAdded', ()=>{
+    homeLabel.textContent = 'میان‌بر به صفحه اصلی اضافه شده ✓';
+    showToast('میان‌بر به صفحه اصلی اضافه شد');
+  });
 
-  // Fill real Telegram user info if available
-  const user = tg.initDataUnsafe && tg.initDataUnsafe.user;
-  if(user){
-    const nameEl = document.querySelector('.profile-name');
-    const avatarEl = document.querySelector('.avatar');
-    if(nameEl) nameEl.textContent = [user.first_name, user.last_name].filter(Boolean).join(' ');
-    if(avatarEl) avatarEl.textContent = (user.first_name||'ک')[0];
-  }
-
-  // Sync BackButton with in-app navigation instead of the browser
-  tg.BackButton.onClick(()=> go('home'));
-  const origGo = go;
-  go = function(screen){
-    origGo(screen);
-    if(screen==='home') tg.BackButton.hide(); else tg.BackButton.show();
-    if(screen==='checkout') syncMainButton();
-  };
-
-  function syncMainButton(){
-    const {totalPrice} = updateCartBar();
-    tg.MainButton.setText('ثبت نهایی سفارش — ' + fmt(totalPrice) + ' تومان');
-    tg.MainButton.show();
-    tg.MainButton.onClick(confirmOrder);
-  }
-  tg.MainButton.hide();
-
-  // Send the completed order back to the bot's backend on confirm
-  const origConfirm = confirmOrder;
-  confirmOrder = function(){
-    tg.MainButton.hide();
-    origConfirm();
-    // tg.sendData(JSON.stringify({event:'order_submitted', ...}));  // for simple bots without a webhook backend
-  };
-}
-</script>
-</body>
-</html>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        
