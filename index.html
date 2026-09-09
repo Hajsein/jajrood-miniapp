@@ -1,0 +1,758 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>آب معدنی جاجرود — دمو مینی‌اپ</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
+<style>
+  :root{
+    --jj-deep:#0F3D3E;
+    --jj-mid:#1C6E6A;
+    --jj-accent:#4FA89B;
+    --jj-mist:#EAF3F0;
+    --jj-cream:#FAF8F3;
+    --jj-stone:#8C9490;
+    --jj-ink:#122523;
+    --jj-gold:#C6A15B;
+    --jj-danger:#B4443A;
+    --radius-lg:20px;
+    --radius-md:14px;
+    --radius-sm:10px;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    font-family:'Vazirmatn',sans-serif;
+    background:#DDE6E1;
+    display:flex;
+    justify-content:center;
+    padding:32px 12px;
+    color:var(--jj-ink);
+  }
+  .phone{
+    width:390px;
+    max-width:100%;
+    background:var(--jj-cream);
+    border-radius:36px;
+    border:8px solid #1a1a1a;
+    box-shadow:0 20px 50px rgba(0,0,0,0.25);
+    overflow:hidden;
+    position:relative;
+  }
+  .notch{
+    position:absolute;
+    top:0;left:50%;
+    transform:translateX(-50%);
+    width:120px;height:22px;
+    background:#1a1a1a;
+    border-radius:0 0 14px 14px;
+    z-index:50;
+  }
+  .screen{
+    height:780px;
+    overflow-y:auto;
+    display:none;
+    flex-direction:column;
+    -ms-overflow-style:none;
+    scrollbar-width:none;
+  }
+  .screen::-webkit-scrollbar{display:none;}
+  .screen.active{display:flex;}
+
+  /* Top bar */
+  .topbar{
+    padding:44px 20px 14px;
+    background:var(--jj-deep);
+    color:#fff;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+  }
+  .topbar .brand{display:flex;align-items:center;gap:10px;}
+  .brand-mark{
+    width:36px;height:36px;border-radius:50%;
+    background:linear-gradient(160deg,var(--jj-accent),var(--jj-mid));
+    display:flex;align-items:center;justify-content:center;
+    font-weight:700;font-size:15px;color:#fff;
+  }
+  .brand-name{font-weight:600;font-size:16px;line-height:1.1;}
+  .brand-sub{font-size:10px;color:#B9D6D0;letter-spacing:.5px;}
+  .icon-btn{
+    width:34px;height:34px;border-radius:50%;
+    background:rgba(255,255,255,0.12);
+    display:flex;align-items:center;justify-content:center;
+    position:relative;cursor:pointer;
+  }
+  .icon-btn svg{width:17px;height:17px;stroke:#fff;}
+  .cart-dot{
+    position:absolute;top:-3px;left:-3px;
+    background:var(--jj-gold);
+    color:var(--jj-deep);
+    font-size:9px;font-weight:700;
+    width:16px;height:16px;border-radius:50%;
+    display:flex;align-items:center;justify-content:center;
+  }
+
+  /* Hero strip */
+  .hero{
+    margin:14px 20px 4px;
+    padding:16px;
+    border-radius:var(--radius-md);
+    background:linear-gradient(120deg,var(--jj-mid),var(--jj-deep));
+    color:#fff;
+    display:flex;align-items:center;justify-content:space-between;
+    gap:10px;
+  }
+  .hero p.h1{font-size:14px;font-weight:600;margin:0 0 4px;}
+  .hero p.h2{font-size:11px;color:#BFDAD5;margin:0;line-height:1.6;}
+  .hero .wave{font-size:26px;opacity:.9;}
+
+  /* Category pills */
+  .cats{
+    display:flex;gap:8px;
+    padding:14px 20px 8px;
+    overflow-x:auto;
+  }
+  .cats::-webkit-scrollbar{display:none;}
+  .pill{
+    white-space:nowrap;
+    padding:7px 16px;
+    border-radius:100px;
+    font-size:12px;
+    background:#fff;
+    color:var(--jj-stone);
+    border:1px solid #E3E0D6;
+    cursor:pointer;
+    flex-shrink:0;
+  }
+  .pill.active{background:var(--jj-deep);color:#fff;border-color:var(--jj-deep);}
+
+  /* Product grid */
+  .grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:12px;
+    padding:8px 20px 16px;
+  }
+  .card{
+    background:#fff;
+    border-radius:var(--radius-md);
+    padding:12px;
+    border:1px solid #EFECE2;
+  }
+  .card .thumb{
+    width:100%;height:86px;
+    border-radius:var(--radius-sm);
+    background:var(--jj-mist);
+    display:flex;align-items:center;justify-content:center;
+    margin-bottom:10px;
+  }
+  .card .thumb svg{width:34px;height:34px;stroke:var(--jj-mid);}
+  .card .name{font-size:13px;font-weight:600;margin:0 0 2px;}
+  .card .desc{font-size:10.5px;color:var(--jj-stone);margin:0 0 10px;}
+  .card .row{display:flex;align-items:center;justify-content:space-between;}
+  .price{font-size:13px;font-weight:700;color:var(--jj-deep);}
+  .addbtn{
+    width:28px;height:28px;border-radius:50%;
+    background:var(--jj-deep);
+    border:none;color:#fff;
+    display:flex;align-items:center;justify-content:center;
+    cursor:pointer;
+  }
+  .addbtn svg{width:14px;height:14px;stroke:#fff;}
+  .stepper{
+    display:flex;align-items:center;gap:8px;
+    background:var(--jj-mist);
+    border-radius:100px;padding:3px 8px;
+  }
+  .stepper button{
+    width:20px;height:20px;border-radius:50%;border:none;
+    background:#fff;color:var(--jj-deep);font-size:13px;
+    display:flex;align-items:center;justify-content:center;cursor:pointer;
+  }
+  .stepper span{font-size:12px;font-weight:600;min-width:14px;text-align:center;}
+
+  /* Sticky cart bar */
+  .cartbar{
+    margin:6px 20px 16px;
+    padding:12px 14px;
+    border-radius:var(--radius-md);
+    background:var(--jj-deep);
+    color:#fff;
+    display:flex;align-items:center;justify-content:space-between;
+    cursor:pointer;
+  }
+  .cartbar .l{display:flex;align-items:center;gap:8px;font-size:12.5px;}
+  .cartbar .l svg{width:16px;height:16px;stroke:var(--jj-gold);}
+  .cartbar .r{font-size:12.5px;font-weight:700;color:var(--jj-gold);}
+
+  /* Bottom nav */
+  .bottomnav{
+    display:flex;
+    border-top:1px solid #E9E5D9;
+    background:#fff;
+    padding:10px 10px calc(10px + env(safe-area-inset-bottom));
+    margin-top:auto;
+  }
+  .navitem{
+    flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;
+    font-size:10px;color:var(--jj-stone);cursor:pointer;
+  }
+  .navitem svg{width:19px;height:19px;stroke:var(--jj-stone);}
+  .navitem.active{color:var(--jj-deep);}
+  .navitem.active svg{stroke:var(--jj-deep);}
+
+  /* Generic section header */
+  .sect-title{
+    padding:16px 20px 6px;
+    font-size:14px;font-weight:600;
+  }
+
+  /* Cart screen */
+  .cartline{
+    display:flex;align-items:center;gap:10px;
+    padding:12px 20px;border-bottom:1px solid #F0EEE5;
+  }
+  .cartline .thumb{width:52px;height:52px;border-radius:10px;background:var(--jj-mist);display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+  .cartline .thumb svg{width:22px;height:22px;stroke:var(--jj-mid);}
+  .cartline .info{flex:1;}
+  .cartline .info .n{font-size:13px;font-weight:600;margin:0 0 2px;}
+  .cartline .info .p{font-size:11px;color:var(--jj-stone);margin:0;}
+  .trash{background:none;border:none;color:var(--jj-danger);cursor:pointer;padding:4px;}
+  .trash svg{width:16px;height:16px;stroke:var(--jj-danger);}
+
+  .summary{
+    margin:14px 20px;padding:14px;
+    background:#fff;border-radius:var(--radius-md);
+    border:1px solid #EFECE2;
+  }
+  .summary .line{display:flex;justify-content:space-between;font-size:12.5px;color:var(--jj-stone);padding:5px 0;}
+  .summary .line.total{color:var(--jj-ink);font-weight:700;font-size:14px;border-top:1px dashed #E3E0D6;margin-top:6px;padding-top:10px;}
+
+  .field{margin:0 20px 14px;}
+  .field label{display:block;font-size:12px;color:var(--jj-stone);margin-bottom:6px;}
+  .field select, .field input{
+    width:100%;padding:11px 12px;border-radius:var(--radius-sm);
+    border:1px solid #E3E0D6;background:#fff;font-family:inherit;font-size:13px;
+  }
+  .addr-card{
+    margin:0 20px 14px;padding:12px 14px;
+    border-radius:var(--radius-md);border:1.5px solid var(--jj-deep);
+    background:var(--jj-mist);
+    display:flex;justify-content:space-between;align-items:flex-start;
+  }
+  .addr-card .t{font-size:12.5px;font-weight:600;margin:0 0 3px;}
+  .addr-card .a{font-size:11.5px;color:var(--jj-stone);margin:0;}
+  .addr-card .badge{font-size:10px;background:var(--jj-deep);color:#fff;padding:2px 8px;border-radius:100px;}
+
+  .cta{
+    margin:8px 20px 20px;
+    padding:14px;border-radius:var(--radius-md);
+    background:var(--jj-deep);color:#fff;
+    border:none;width:calc(100% - 40px);
+    font-family:inherit;font-size:14px;font-weight:600;
+    display:flex;align-items:center;justify-content:center;gap:8px;
+    cursor:pointer;
+  }
+  .cta.ghost{background:#fff;color:var(--jj-deep);border:1.5px solid var(--jj-deep);}
+  .cta:disabled{opacity:.45;cursor:not-allowed;}
+
+  /* Orders */
+  .order-card{
+    margin:0 20px 12px;padding:14px;
+    background:#fff;border-radius:var(--radius-md);border:1px solid #EFECE2;
+  }
+  .order-card .top{display:flex;justify-content:space-between;margin-bottom:8px;}
+  .order-card .id{font-size:12px;font-weight:600;}
+  .order-card .date{font-size:10.5px;color:var(--jj-stone);}
+  .status{
+    font-size:10px;padding:3px 10px;border-radius:100px;font-weight:600;
+  }
+  .status.pending{background:#FDF0DC;color:var(--jj-gold);}
+  .status.shipping{background:#E4EEF7;color:#3D6E9B;}
+  .status.done{background:#E4F1E8;color:#3B8556;}
+  .order-card .items{font-size:11.5px;color:var(--jj-stone);margin:0 0 8px;}
+  .order-card .foot{display:flex;justify-content:space-between;align-items:center;}
+  .reorder{
+    font-size:11px;background:var(--jj-mist);color:var(--jj-deep);
+    border:none;padding:6px 12px;border-radius:100px;cursor:pointer;font-weight:600;
+  }
+
+  /* Profile */
+  .profile-head{
+    padding:28px 20px 18px;background:var(--jj-deep);color:#fff;
+    display:flex;align-items:center;gap:12px;
+  }
+  .avatar{
+    width:52px;height:52px;border-radius:50%;
+    background:var(--jj-gold);color:var(--jj-deep);
+    display:flex;align-items:center;justify-content:center;
+    font-weight:700;font-size:17px;
+  }
+  .profile-name{font-size:15px;font-weight:600;margin:0 0 2px;}
+  .profile-phone{font-size:11.5px;color:#BFDAD5;margin:0;direction:ltr;text-align:right;}
+
+  .points-card{
+    margin:-16px 20px 6px;padding:14px;
+    background:#fff;border-radius:var(--radius-md);
+    box-shadow:0 6px 18px rgba(15,61,62,0.12);
+    display:flex;justify-content:space-between;align-items:center;
+  }
+  .points-card .l{font-size:11.5px;color:var(--jj-stone);}
+  .points-card .v{font-size:20px;font-weight:700;color:var(--jj-deep);}
+
+  .menu-list{margin:10px 20px;background:#fff;border-radius:var(--radius-md);border:1px solid #EFECE2;overflow:hidden;}
+  .menu-row{
+    display:flex;align-items:center;gap:12px;
+    padding:13px 14px;border-bottom:1px solid #F3F1E9;
+    font-size:12.5px;
+  }
+  .menu-row:last-child{border-bottom:none;}
+  .menu-row svg{width:17px;height:17px;stroke:var(--jj-mid);flex-shrink:0;}
+  .menu-row .chev{margin-right:auto;stroke:var(--jj-stone);width:14px;height:14px;}
+
+  .empty{
+    display:flex;flex-direction:column;align-items:center;justify-content:center;
+    padding:60px 30px;text-align:center;color:var(--jj-stone);
+    flex:1;
+  }
+  .empty svg{width:48px;height:48px;stroke:#C9C4B4;margin-bottom:12px;}
+  .empty p{font-size:12.5px;margin:0;}
+
+  .toast{
+    position:absolute;bottom:90px;left:50%;transform:translateX(-50%) translateY(20px);
+    background:var(--jj-ink);color:#fff;font-size:12px;
+    padding:10px 18px;border-radius:100px;
+    opacity:0;transition:all .25s ease;pointer-events:none;z-index:60;
+    white-space:nowrap;
+  }
+  .toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+
+  .confirm-wrap{
+    flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;
+    padding:30px;text-align:center;
+  }
+  .confirm-icon{
+    width:70px;height:70px;border-radius:50%;background:#E4F1E8;
+    display:flex;align-items:center;justify-content:center;margin-bottom:18px;
+  }
+  .confirm-icon svg{width:32px;height:32px;stroke:#3B8556;}
+  .confirm-wrap h3{font-size:16px;margin:0 0 8px;}
+  .confirm-wrap p{font-size:12.5px;color:var(--jj-stone);margin:0 0 4px;line-height:1.7;}
+  .track-code{
+    margin-top:14px;padding:8px 16px;background:var(--jj-mist);
+    border-radius:100px;font-size:12px;font-weight:700;color:var(--jj-deep);
+    letter-spacing:1px;direction:ltr;
+  }
+</style>
+</head>
+<body>
+<div class="phone">
+  <div class="notch"></div>
+
+  <!-- ===== HOME ===== -->
+  <div class="screen active" id="screen-home">
+    <div class="topbar">
+      <div class="brand">
+        <div class="brand-mark">ج</div>
+        <div>
+          <div class="brand-name">آب معدنی جاجرود</div>
+          <div class="brand-sub">از دل کوهستان تا خانه شما</div>
+        </div>
+      </div>
+      <div class="icon-btn" onclick="go('cart')">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+        <span class="cart-dot" id="cart-badge">0</span>
+      </div>
+    </div>
+
+    <div class="hero">
+      <div>
+        <p class="h1">تحویل امروز تا عصر</p>
+        <p class="h2">سفارش بالای ۲۰۰ هزار تومان، ارسال رایگان</p>
+      </div>
+      <div class="wave">💧</div>
+    </div>
+
+    <div class="cats">
+      <div class="pill active" onclick="filterCat(this,'all')">همه محصولات</div>
+      <div class="pill" onclick="filterCat(this,'bottle')">بطری</div>
+      <div class="pill" onclick="filterCat(this,'gallon')">گالن</div>
+      <div class="pill" onclick="filterCat(this,'pack')">بسته اداری</div>
+    </div>
+
+    <div class="grid" id="product-grid"></div>
+
+    <div class="cartbar" id="cartbar" style="display:none;" onclick="go('cart')">
+      <div class="l">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+        <span id="cartbar-text">۲ کالا در سبد</span>
+      </div>
+      <div class="r" id="cartbar-price">۱۷۰,۰۰۰ تومان</div>
+    </div>
+
+    <div style="flex:1"></div>
+    <div class="bottomnav" id="nav-home"></div>
+  </div>
+
+  <!-- ===== CART ===== -->
+  <div class="screen" id="screen-cart">
+    <div class="topbar">
+      <div class="brand"><span style="font-size:15px;font-weight:600;">سبد خرید</span></div>
+      <div class="icon-btn" onclick="go('home')">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6L6 18M6 6l12 12"/></svg>
+      </div>
+    </div>
+    <div id="cart-content" style="flex:1;"></div>
+    <div class="bottomnav" id="nav-cart"></div>
+  </div>
+
+  <!-- ===== CHECKOUT ===== -->
+  <div class="screen" id="screen-checkout">
+    <div class="topbar">
+      <div class="brand"><span style="font-size:15px;font-weight:600;">تکمیل سفارش</span></div>
+      <div class="icon-btn" onclick="go('cart')">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6L6 18M6 6l12 12"/></svg>
+      </div>
+    </div>
+
+    <div class="sect-title">آدرس تحویل</div>
+    <div class="addr-card">
+      <div>
+        <p class="t">منزل — تهران، تجریش</p>
+        <p class="a">خیابان ولیعصر، کوچه بهار، پلاک ۱۲</p>
+      </div>
+      <span class="badge">پیش‌فرض</span>
+    </div>
+
+    <div class="sect-title">زمان تحویل</div>
+    <div class="field">
+      <select>
+        <option>امروز عصر (۱۶ تا ۲۰)</option>
+        <option>فردا صبح (۹ تا ۱۲)</option>
+        <option>فردا عصر (۱۶ تا ۲۰)</option>
+      </select>
+    </div>
+
+    <div class="sect-title">روش پرداخت</div>
+    <div class="field">
+      <select>
+        <option>پرداخت آنلاین</option>
+        <option>پرداخت در محل (کارتخوان)</option>
+      </select>
+    </div>
+
+    <div class="summary">
+      <div class="line"><span>جمع کالاها</span><span id="chk-subtotal">۰ تومان</span></div>
+      <div class="line"><span>هزینه ارسال</span><span>رایگان</span></div>
+      <div class="line total"><span>مبلغ نهایی</span><span id="chk-total">۰ تومان</span></div>
+    </div>
+
+    <div style="flex:1"></div>
+    <button class="cta" onclick="confirmOrder()">
+      <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
+      ثبت نهایی سفارش
+    </button>
+  </div>
+
+  <!-- ===== CONFIRM ===== -->
+  <div class="screen" id="screen-confirm">
+    <div class="confirm-wrap">
+      <div class="confirm-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
+      </div>
+      <h3>سفارش شما ثبت شد</h3>
+      <p>جاجرود به‌زودی سفارش شما را آماده و ارسال می‌کند.</p>
+      <div class="track-code">#JJ-4821</div>
+      <button class="cta" style="margin-top:28px;width:100%;max-width:260px;" onclick="go('orders')">پیگیری سفارش</button>
+      <button class="cta ghost" style="width:100%;max-width:260px;" onclick="go('home')">بازگشت به فروشگاه</button>
+    </div>
+  </div>
+
+  <!-- ===== ORDERS ===== -->
+  <div class="screen" id="screen-orders">
+    <div class="topbar">
+      <div class="brand"><span style="font-size:15px;font-weight:600;">سفارش‌های من</span></div>
+      <div style="width:34px;"></div>
+    </div>
+
+    <div class="order-card">
+      <div class="top"><span class="id">سفارش #JJ-4821</span><span class="status pending">در انتظار تایید</span></div>
+      <p class="items">۲ عدد بطری ۱.۵ لیتری، ۱ عدد گالن ۱۹ لیتری</p>
+      <div class="foot"><span class="date">امروز، ۱۴:۲۰</span><button class="reorder" onclick="showToast('سفارش به سبد اضافه شد')">سفارش تکراری</button></div>
+    </div>
+
+    <div class="order-card">
+      <div class="top"><span class="id">سفارش #JJ-4790</span><span class="status shipping">در حال ارسال</span></div>
+      <p class="items">۱ بسته اداری ۱۲ عددی</p>
+      <div class="foot"><span class="date">دیروز، ۱۱:۰۵</span><button class="reorder" onclick="showToast('سفارش به سبد اضافه شد')">سفارش تکراری</button></div>
+    </div>
+
+    <div class="order-card">
+      <div class="top"><span class="id">سفارش #JJ-4712</span><span class="status done">تحویل شده</span></div>
+      <p class="items">۲ عدد گالن ۱۹ لیتری</p>
+      <div class="foot"><span class="date">۳ روز پیش</span><button class="reorder" onclick="showToast('سفارش به سبد اضافه شد')">سفارش تکراری</button></div>
+    </div>
+
+    <div style="flex:1"></div>
+    <div class="bottomnav" id="nav-orders"></div>
+  </div>
+
+  <!-- ===== PROFILE ===== -->
+  <div class="screen" id="screen-profile">
+    <div class="profile-head">
+      <div class="avatar">ح</div>
+      <div>
+        <p class="profile-name">حسین رضایی</p>
+        <p class="profile-phone">۰۹۱۲ ۱۲۳ ۴۵۶۷</p>
+      </div>
+    </div>
+    <div class="points-card">
+      <div><div class="l">امتیاز باشگاه مشتریان</div><div class="v">۱۲۸ امتیاز</div></div>
+      <button class="reorder">مشاهده تخفیف‌ها</button>
+    </div>
+
+    <div class="menu-list">
+      <div class="menu-row">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 12-9 12s-9-5-9-12a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+        آدرس‌های من
+        <svg class="chev" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
+      </div>
+      <div class="menu-row">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+        تاریخچه سفارش‌ها
+        <svg class="chev" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
+      </div>
+      <div class="menu-row">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9M13.73 21a2 2 0 01-3.46 0"/></svg>
+        اعلان‌ها
+        <svg class="chev" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
+      </div>
+      <div class="menu-row">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 9V5a3 3 0 00-6 0v4M5 9h14l-1 12H6L5 9z"/></svg>
+        پشتیبانی
+        <svg class="chev" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
+      </div>
+    </div>
+
+    <div style="flex:1"></div>
+    <div class="bottomnav" id="nav-profile"></div>
+  </div>
+
+  <div class="toast" id="toast"></div>
+</div>
+
+<script>
+const products = [
+  {id:1, cat:'bottle', name:'بطری ۱.۵ لیتری', desc:'بسته ۶ تایی', price:85000, icon:'bottle'},
+  {id:2, cat:'bottle', name:'بطری ۰.۵ لیتری', desc:'بسته ۱۲ تایی', price:60000, icon:'bottle'},
+  {id:3, cat:'gallon', name:'گالن ۱۹ لیتری', desc:'تک عددی، همراه پایه', price:65000, icon:'gallon'},
+  {id:4, cat:'gallon', name:'گالن ۱۹ لیتری', desc:'بسته ۲ عددی', price:120000, icon:'gallon'},
+  {id:5, cat:'pack', name:'بسته اداری', desc:'۲۴ بطری ۰.۵ لیتری', price:110000, icon:'pack'},
+  {id:6, cat:'pack', name:'بسته مهمانی', desc:'ترکیب بطری و گالن', price:150000, icon:'pack'},
+];
+
+const icons = {
+  bottle:'<svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 2h6M10 2v4l-2.5 3.5A4 4 0 006.5 12v7a2 2 0 002 2h7a2 2 0 002-2v-7a4 4 0 00-1-2.5L14 6V2"/></svg>',
+  gallon:'<svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3h8M9 3v3l-3 3v10a2 2 0 002 2h8a2 2 0 002-2V9l-3-3V3"/></svg>',
+  pack:'<svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 8l-9-5-9 5 9 5 9-5zM3 8v8l9 5 9-5V8M12 13v8"/></svg>'
+};
+
+const navIcons = [
+  {key:'home', label:'خانه', svg:'<path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><path d="M9 22V12h6v10"/>'},
+  {key:'orders', label:'سفارش‌ها', svg:'<rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/>'},
+  {key:'cart', label:'سبد خرید', svg:'<circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 002 1.61h9.72a2 2 0 002-1.61L23 6H6"/>'},
+  {key:'profile', label:'پروفایل', svg:'<path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/>'}
+];
+
+let cart = {};
+let currentCat = 'all';
+
+function renderNav(activeKey){
+  return navIcons.map(n=>`
+    <div class="navitem ${n.key===activeKey?'active':''}" onclick="go('${n.key}')">
+      <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${n.svg}</svg>
+      <span>${n.label}</span>
+    </div>`).join('');
+}
+
+function renderProducts(){
+  const grid = document.getElementById('product-grid');
+  const filtered = currentCat==='all' ? products : products.filter(p=>p.cat===currentCat);
+  grid.innerHTML = filtered.map(p=>{
+    const qty = cart[p.id] || 0;
+    return `<div class="card">
+      <div class="thumb">${icons[p.icon]}</div>
+      <p class="name">${p.name}</p>
+      <p class="desc">${p.desc}</p>
+      <div class="row">
+        <span class="price">${fmt(p.price)} ت</span>
+        ${qty===0 ?
+          `<button class="addbtn" onclick="changeQty(${p.id},1)"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"/></svg></button>`
+          :
+          `<div class="stepper">
+            <button onclick="changeQty(${p.id},1)">+</button>
+            <span>${qty}</span>
+            <button onclick="changeQty(${p.id},-1)">−</button>
+          </div>`
+        }
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function changeQty(id, delta){
+  cart[id] = (cart[id]||0) + delta;
+  if(cart[id]<=0) delete cart[id];
+  renderProducts();
+  updateCartBar();
+}
+
+function updateCartBar(){
+  const totalQty = Object.values(cart).reduce((a,b)=>a+b,0);
+  const totalPrice = Object.entries(cart).reduce((sum,[id,q])=>{
+    const p = products.find(pr=>pr.id==id);
+    return sum + p.price*q;
+  },0);
+  document.getElementById('cart-badge').textContent = totalQty;
+  const bar = document.getElementById('cartbar');
+  bar.style.display = totalQty>0 ? 'flex' : 'none';
+  document.getElementById('cartbar-text').textContent = `${toFa(totalQty)} کالا در سبد`;
+  document.getElementById('cartbar-price').textContent = fmt(totalPrice)+' تومان';
+  return {totalQty, totalPrice};
+}
+
+function renderCart(){
+  const entries = Object.entries(cart);
+  const content = document.getElementById('cart-content');
+  if(entries.length===0){
+    content.innerHTML = `<div class="empty">
+      <svg viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 002 1.61h9.72a2 2 0 002-1.61L23 6H6"/></svg>
+      <p>سبد خرید شما خالیه</p>
+    </div>`;
+    return;
+  }
+  let total = 0;
+  const lines = entries.map(([id,q])=>{
+    const p = products.find(pr=>pr.id==id);
+    total += p.price*q;
+    return `<div class="cartline">
+      <div class="thumb">${icons[p.icon]}</div>
+      <div class="info">
+        <p class="n">${p.name}</p>
+        <p class="p">${fmt(p.price)} ت × ${toFa(q)}</p>
+      </div>
+      <div class="stepper">
+        <button onclick="changeQty(${p.id},1); renderCart(); updateCartBar();">+</button>
+        <span>${q}</span>
+        <button onclick="changeQty(${p.id},-1); renderCart(); updateCartBar();">−</button>
+      </div>
+    </div>`;
+  }).join('');
+
+  content.innerHTML = lines + `
+    <div class="summary">
+      <div class="line"><span>جمع کالاها</span><span>${fmt(total)} تومان</span></div>
+      <div class="line"><span>هزینه ارسال</span><span>${total>=200000?'رایگان':'۲۵,۰۰۰ تومان'}</span></div>
+      <div class="line total"><span>مبلغ نهایی</span><span>${fmt(total + (total>=200000?0:25000))} تومان</span></div>
+    </div>
+    <button class="cta" onclick="go('checkout')">ادامه فرآیند خرید</button>
+  `;
+}
+
+function updateCheckoutSummary(){
+  const {totalPrice} = updateCartBar();
+  document.getElementById('chk-subtotal').textContent = fmt(totalPrice)+' تومان';
+  document.getElementById('chk-total').textContent = fmt(totalPrice + (totalPrice>=200000?0:25000))+' تومان';
+}
+
+function confirmOrder(){
+  cart = {};
+  updateCartBar();
+  renderProducts();
+  go('confirm');
+}
+
+function filterCat(el, cat){
+  currentCat = cat;
+  document.querySelectorAll('.pill').forEach(p=>p.classList.remove('active'));
+  el.classList.add('active');
+  renderProducts();
+}
+
+function fmt(n){ return toFa(n.toLocaleString('en-US')); }
+function toFa(str){
+  const map = {'0':'۰','1':'۱','2':'۲','3':'۳','4':'۴','5':'۵','6':'۶','7':'۷','8':'۸','9':'۹'};
+  return String(str).replace(/[0-9]/g, d=>map[d]);
+}
+
+function showToast(msg){
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'), 1800);
+}
+
+function go(screen){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.getElementById('screen-'+screen).classList.add('active');
+  if(screen==='cart') renderCart();
+  if(screen==='checkout') updateCheckoutSummary();
+  window.scrollTo(0,0);
+}
+
+// init
+document.getElementById('nav-home').innerHTML = renderNav('home');
+document.getElementById('nav-cart').innerHTML = renderNav('cart');
+document.getElementById('nav-orders').innerHTML = renderNav('orders');
+document.getElementById('nav-profile').innerHTML = renderNav('profile');
+renderProducts();
+updateCartBar();
+
+// ===== Telegram Mini App integration =====
+const tg = window.Telegram ? window.Telegram.WebApp : null;
+if(tg){
+  tg.ready();
+  tg.expand();
+
+  // Fill real Telegram user info if available
+  const user = tg.initDataUnsafe && tg.initDataUnsafe.user;
+  if(user){
+    const nameEl = document.querySelector('.profile-name');
+    const avatarEl = document.querySelector('.avatar');
+    if(nameEl) nameEl.textContent = [user.first_name, user.last_name].filter(Boolean).join(' ');
+    if(avatarEl) avatarEl.textContent = (user.first_name||'ک')[0];
+  }
+
+  // Sync BackButton with in-app navigation instead of the browser
+  tg.BackButton.onClick(()=> go('home'));
+  const origGo = go;
+  go = function(screen){
+    origGo(screen);
+    if(screen==='home') tg.BackButton.hide(); else tg.BackButton.show();
+    if(screen==='checkout') syncMainButton();
+  };
+
+  function syncMainButton(){
+    const {totalPrice} = updateCartBar();
+    tg.MainButton.setText('ثبت نهایی سفارش — ' + fmt(totalPrice) + ' تومان');
+    tg.MainButton.show();
+    tg.MainButton.onClick(confirmOrder);
+  }
+  tg.MainButton.hide();
+
+  // Send the completed order back to the bot's backend on confirm
+  const origConfirm = confirmOrder;
+  confirmOrder = function(){
+    tg.MainButton.hide();
+    origConfirm();
+    // tg.sendData(JSON.stringify({event:'order_submitted', ...}));  // for simple bots without a webhook backend
+  };
+}
+</script>
+</body>
+</html>
