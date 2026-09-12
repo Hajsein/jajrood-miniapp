@@ -1,0 +1,11 @@
+name = "jajrood-backend"
+main = "src/index.js"
+compatibility_date = "2024-09-01"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "jajrood-db"
+database_id = "fdc244ee-2df3-41df-8a8b-22ca227c2e5b"
+
+[vars]
+ADMIN_CHAT_ID = "304708858"
